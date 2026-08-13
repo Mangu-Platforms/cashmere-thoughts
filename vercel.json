@@ -1,7 +1,15 @@
 {
   "version": 2,
-  "framework": null,
-  "buildCommand": "echo 'SkillVoice Studio is a local CLI tool — not a web application. Skipping Vercel Python runtime.'",
-  "outputDirectory": ".",
-  "installCommand": "echo 'No install required for static view of this CLI repository.'"
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ]
 }
