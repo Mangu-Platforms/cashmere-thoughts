@@ -1,0 +1,24 @@
+{
+  "house": {
+    "name": "house",
+    "loudness_lufs": -16.0,
+    "true_peak_dbtp": -1.0,
+    "lra": 8.0,
+    "delivery_sample_rate": 44100,
+    "peak_mode": "truepeak",
+    "default_format": "wav",
+    "bitrate": null,
+    "chapters_required": false
+  },
+  "distribution-safe": {
+    "name": "distribution-safe",
+    "loudness_lufs": -18.0,
+    "true_peak_dbtp": -1.5,
+    "lra": 9.0,
+    "delivery_sample_rate": 44100,
+    "peak_mode": "truepeak",
+    "default_format": "m4b",
+    "bitrate": "128k",
+    "chapters_required": true
+  }
+}
