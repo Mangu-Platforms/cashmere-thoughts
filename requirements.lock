@@ -1,0 +1,6 @@
+piper-tts==1.6.0
+pydantic==2.13.4
+rich==15.0.0
+typer==0.26.3
+pytest==9.0.2
+pytest-cov==7.0.0
