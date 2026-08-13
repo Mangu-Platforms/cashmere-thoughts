@@ -1,0 +1,30 @@
+name: Nightly Piper contract
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pinned piper
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install piper-tts==1.6.0
+      - name: Probe SynthesisConfig contract
+        run: |
+          python -c "
+          from piper import PiperVoice, SynthesisConfig
+          import inspect
+          params = set(inspect.signature(SynthesisConfig).parameters)
+          required = {'length_scale', 'noise_scale', 'noise_w_scale'}
+          missing = required - params
+          assert not missing, f'Missing {missing}'
+          print('Piper 1.6 contract OK')
+          "
