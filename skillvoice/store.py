@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from .errors import ConfigError
 
-T = TypeVar("T", bound=BaseModel)
+ModelT = TypeVar("ModelT", bound=BaseModel)
 
 
 def data_dir() -> Path:
@@ -24,20 +24,24 @@ def ensure_layout() -> Path:
     return root
 
 
-def write_model(path: Path, model: BaseModel) -> None:
+def atomic_write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(model.model_dump_json(indent=2), encoding="utf-8")
+    tmp.write_text(text, encoding="utf-8")
     with tmp.open("rb") as handle:
         os.fsync(handle.fileno())
     tmp.replace(path)
 
 
-def read_model(path: Path, model_cls: type[T]) -> T:
+def write_model(path: Path, model: BaseModel) -> None:
+    atomic_write_text(path, model.model_dump_json(indent=2))
+
+
+def read_model(path: Path, model_type: type[ModelT]) -> ModelT:
     if not path.exists():
         raise ConfigError(
             f"Missing state file: {path}",
             remedy="Run the corresponding create/init command first.",
             stage="preflight",
         )
-    return model_cls.model_validate_json(path.read_text(encoding="utf-8"))
+    return model_type.model_validate_json(path.read_text(encoding="utf-8"))
